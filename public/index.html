@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Canon Health – Shared Records MVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="centered-container">
+    <div class="card login-card">
+      <h1 class="app-title">Canon Health</h1>
+      <p class="subtitle">Secure, patient-controlled medical records</p>
+
+      <form id="loginForm" class="form-column">
+        <label>
+          Name
+          <input type="text" name="name" placeholder="Dr. Jane Doe / John Smith" required />
+        </label>
+
+        <label>
+          Email Address
+          <input type="email" name="email" placeholder="you@example.com" required />
+        </label>
+
+        <label>
+          Account Type
+          <select name="role" id="roleSelect" required>
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+          </select>
+        </label>
+
+        <label id="healthCardField">
+          Health Card Number
+          <input type="text" name="healthCard" placeholder="1234-567-890-A" />
+        </label>
+
+        <button type="submit" class="primary-btn">Log In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PATIENT APP -->
+  <div id="patientApp" class="app hidden">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-title">Canon Health</span>
+      </div>
+      <nav class="nav-links">
+        <button class="nav-link active" data-target="patient-view-records">View Records</button>
+        <button class="nav-link" data-target="patient-upload-records">Upload Records</button>
+        <button class="nav-link" data-target="patient-permissions">Record Viewing Permissions</button>
+      </nav>
+      <div class="user-pill" id="patientUserInfo"></div>
+    </header>
+
+    <main class="app-main">
+      <!-- PATIENT: View Records -->
+      <section id="patient-view-records" class="view-section">
+        <h2>View Your Records</h2>
+        <p class="section-subtitle">
+          All of your uploaded medical documents in one place.
+        </p>
+        <div class="card">
+          <table class="records-table">
+            <thead>
+              <tr>
+                <th>Document</th>
+                <th>Upload Date</th>
+                <th>Uploaded By</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="patientDocumentsBody">
+              <!-- Filled dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PATIENT: Upload Records -->
+      <section id="patient-upload-records" class="view-section hidden">
+        <h2>Upload Medical Records</h2>
+        <p class="section-subtitle">
+          Enter your health card number and upload a file to add it to your record.
+        </p>
+        <div class="card upload-card">
+          <form id="patientUploadForm" class="form-column">
+            <label>
+              Health Card Number
+              <input type="text" id="patientUploadHealthCard" placeholder="1234-567-890-A" required />
+            </label>
+
+            <label class="file-label">
+              Upload a File
+              <input type="file" id="patientFileInput" required />
+            </label>
+
+            <button type="submit" class="primary-btn">Upload File</button>
+            <p class="hint">
+              For the demo, any PDF / image / document file will work.
+            </p>
+          </form>
+        </div>
+      </section>
+
+      <!-- PATIENT: Permissions / Requests -->
+      <section id="patient-permissions" class="view-section hidden">
+        <h2>Record Viewing Permissions</h2>
+        <p class="section-subtitle">
+          Review and respond to access requests from clinics and doctors.
+        </p>
+
+        <div id="patientRequestsContainer" class="requests-container">
+          <!-- Request cards injected here -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- DOCTOR APP -->
+  <div id="doctorApp" class="app hidden">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-title">Canon Health</span>
+      </div>
+      <nav class="nav-links">
+        <button class="nav-link active" data-target="doctor-request-access">Request Patient Folder</button>
+        <button class="nav-link" data-target="doctor-view-records">View Records</button>
+        <button class="nav-link" data-target="doctor-upload-records">Upload Records</button>
+      </nav>
+      <div class="user-pill" id="doctorUserInfo"></div>
+    </header>
+
+    <main class="app-main">
+      <!-- DOCTOR: Request Access -->
+      <section id="doctor-request-access" class="view-section">
+        <h2>Request Patient Folder</h2>
+        <p class="section-subtitle">
+          Enter the patient's health card and select what information you need to review.
+        </p>
+
+        <div class="card">
+          <form id="doctorRequestForm" class="form-column">
+            <div class="request-header-row">
+              <div>
+                <span class="muted">Doctor</span>
+                <div id="doctorNameLabel" class="doctor-name-label">Dr. Doe</div>
+              </div>
+              <div>
+                <label>
+                  Patient Health Card
+                  <input
+                    type="text"
+                    id="doctorRequestHealthCard"
+                    placeholder="1234-567-890-A"
+                    required
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div class="checklist-card">
+              <p class="muted">What do you need to review?</p>
+              <div class="checklist-grid">
+                <label><input type="checkbox" name="reason" value="medical-records" checked /> Review patient's medical records</label>
+                <label><input type="checkbox" name="reason" value="intake-form" /> Review patient's intake form</label>
+                <label><input type="checkbox" name="reason" value="messages" /> Check for any new messages from the patient</label>
+                <label><input type="checkbox" name="reason" value="previous-notes" /> Review your notes from previous consultations</label>
+                <label><input type="checkbox" name="reason" value="treatment-plan" /> Review the patient's treatment plan</label>
+                <label><input type="checkbox" name="reason" value="medications" /> Review the patient's medications</label>
+                <label><input type="checkbox" name="reason" value="lab-results" /> Review the patient's lab results</label>
+                <label><input type="checkbox" name="reason" value="imaging" /> Review the patient's imaging results</label>
+                <label><input type="checkbox" name="reason" value="vital-signs" /> Review the patient's vital signs</label>
+                <label><input type="checkbox" name="reason" value="symptoms" /> Review the patient's symptoms</label>
+                <label><input type="checkbox" name="reason" value="allergies" /> Review the patient's allergies</label>
+                <label><input type="checkbox" name="reason" value="family-history" /> Review the patient's family medical history</label>
+              </div>
+            </div>
+
+            <button type="submit" class="primary-btn align-right">Send Request</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- DOCTOR: View Records -->
+      <section id="doctor-view-records" class="view-section hidden">
+        <h2>View Patient Records</h2>
+        <p class="section-subtitle">
+          You can view records for patients who have approved your access request.
+        </p>
+
+        <div class="card">
+          <form id="doctorViewForm" class="inline-form">
+            <label>
+              Patient Health Card
+              <input type="text" id="doctorViewHealthCard" placeholder="1234-567-890-A" required />
+            </label>
+            <button type="submit" class="primary-btn">Load Records</button>
+          </form>
+
+          <table class="records-table">
+            <thead>
+              <tr>
+                <th>Document</th>
+                <th>Upload Date</th>
+                <th>Uploaded By</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="doctorDocumentsBody">
+              <!-- filled dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- DOCTOR: Upload Records -->
+      <section id="doctor-upload-records" class="view-section hidden">
+        <h2>Upload Medical Records</h2>
+        <p class="section-subtitle">
+          Upload a file to add it directly to a patient's Canon Health folder.
+        </p>
+
+        <div class="card upload-card">
+          <form id="doctorUploadForm" class="form-column">
+            <label>
+              Patient's Health Card Number
+              <input type="text" id="doctorUploadHealthCard" placeholder="1234-567-890-A" required />
+            </label>
+
+            <label class="file-label">
+              Upload a File
+              <input type="file" id="doctorFileInput" required />
+            </label>
+
+            <button type="submit" class="primary-btn">Upload File</button>
+            <p class="hint">
+              For the MVP, this simply attaches the document to that patient's Canon Health folder.
+            </p>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
